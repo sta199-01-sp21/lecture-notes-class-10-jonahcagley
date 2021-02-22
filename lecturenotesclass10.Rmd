@@ -133,6 +133,9 @@ compute this theoretically yet, but this is what computers are good at.
 
 Before we do this, what is your guess as to what the probability will be?
 
+I think it is likely to get 2 marbles of the same color because there are
+only 3 colors.
+
 We'll still use `sample()` to run our simulation many times, but we'll
 use `dplyr` functions to compute the relative frequencies.
 
@@ -146,6 +149,8 @@ two_draw_results
 
 How can we add a variable to `two_draw_results` to see if `draw_1` and `draw_2`
 match?
+
+Mutate command in dplyr
 
 ```{r identify_matches}
 two_draw_results <- two_draw_results %>% 
@@ -173,15 +178,24 @@ Perform a simulation to compute this empirical probability.
 Write down your guess to the answer before you calculate it.
 
 ```{r simulate_rolls}
-
+roll_results <- tibble(
+  die_1 = replicate(n = 1000, expr = sample(1:6, size = 1)),
+  die_2 = replicate(n = 1000, expr = sample(1:6, size = 1))
+)
 ```
 
 ```{r identify_events}
-
+roll_results <- roll_results %>% 
+  mutate(event1 = die_1^2 == die_2,
+         event2 = abs(die_1 = die_2) == 4)
+roll_results
 ```
 
 ```{r summarize_rolls}
-
+roll_results %>% 
+  summarise(event1_prob = mean(event1),
+            event2_prob = mean(event2))
+roll_results
 ```
 
 ## Additional Resources-please look at before Weds.
